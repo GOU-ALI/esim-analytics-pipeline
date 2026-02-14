@@ -1,0 +1,25 @@
+# System
+.DS_Store
+
+# Scala/SBT
+target/
+project/target/
+project/project/
+.bsp/
+.sbt/
+.idea/
+
+# Terraform
+.terraform/
+.terraform.lock.hcl
+*.tfstate
+*.tfstate.backup
+*.tfvars
+
+# Python
+__pycache__/
+*.pyc
+
+# Data
+data/*.csv
+local_log.txt
