@@ -1,7 +1,9 @@
 #!/bin/bash
 
 # Configuration
-PROJECT_ID="mon-projet-telecom-123"
+if [ -z "$PROJECT_ID" ]; then
+    PROJECT_ID="mon-projet-telecom-123"
+fi
 REGION="europe-west1"
 CLUSTER_NAME="telecom-cluster"
 BUCKET_NAME="mon-projet-telecom-123-esim-data"
@@ -17,12 +19,12 @@ then
 fi
 
 echo "--- Deleting Dataproc Cluster ---"
-gcloud dataproc clusters delete $CLUSTER_NAME --region=$REGION --project=$PROJECT_ID --quiet
+gcloud dataproc clusters delete $CLUSTER_NAME --region=$REGION --project=$PROJECT_ID --quiet || echo "Cluster Not Found"
 
 echo "--- Deleting BigQuery Dataset ---"
-bq rm -r -f -d $PROJECT_ID:$DATASET_NAME
+bq rm -r -f -d $PROJECT_ID:$DATASET_NAME || echo "Dataset Not Found"
 
 echo "--- Deleting GCS Bucket ---"
-gcloud storage rm -r gs://$BUCKET_NAME
+gcloud storage rm -r gs://$BUCKET_NAME || echo "Bucket Not Found"
 
 echo "✅ Cleanup Completed. No more billing for these resources."

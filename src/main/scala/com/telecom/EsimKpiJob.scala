@@ -12,10 +12,15 @@ object EsimKpiJob {
 
     import spark.implicits._
 
-    // Configuration (Should be passed as args in prod)
-    val projectId = "mon-projet-telecom-123"
-    val bucket = "mon-projet-telecom-123-esim-data"
-    val bqDataset = "esim_analytics"
+    // Configuration (Passed as args in prod)
+    if (args.length < 3) {
+      System.err.println("Usage: EsimKpiJob <projectId> <bucketName> <bqDataset>")
+      System.exit(1)
+    }
+
+    val projectId = args(0)
+    val bucket = args(1)
+    val bqDataset = args(2)
     
     // GCS Paths
     val ordersPath = s"gs://$bucket/raw/esim_orders.csv"

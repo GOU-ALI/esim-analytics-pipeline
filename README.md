@@ -13,7 +13,6 @@ Ingest, process, and analyze eSIM data (Orders, Activations, Usage) to calculate
 3.  **Processing**: **Apache Spark** job (Scala) on **Cloud Dataproc** processes data and calculates KPIs.
 4.  **Warehousing**: Results are loaded into **BigQuery** for analysis.
 5.  **Visualization**: Dashboard in **Looker Studio** (optional).
-6.  **IaC**: Infrastructure managed via **Terraform**.
 
 ## 📊 Data Schema
 
@@ -40,7 +39,7 @@ Analyzes performance by device model.
 
 
 ## 🛠 Tech Stack
--   **Language**: Scala (Spark), Python (Data Gen), HCL (Terraform)
+-   **Language**: Scala (Spark), Python (Data Gen)
 -   **GCP Services**: GCS, Dataproc, BigQuery
 -   **Tools**: SBT, gcloud CLI
 
@@ -49,17 +48,17 @@ Analyzes performance by device model.
 ### Prerequisites
 -   GCP Project with Billing enabled.
 -   `gcloud` CLI installed and authenticated.
--   `terraform` and `sbt` installed.
+-   `sbt` installed.
 
-### 1. Infrastructure Setup (Terraform)
+### 1. Generate Data (Optional)
+If you want to generate fresh synthetic data, run the Python script:
 ```bash
-cd terraform
-terraform init
-terraform apply -var="project_id=YOUR_PROJECT_ID"
+# Ensure you have pandas installed (pip install pandas)
+python3 data/generate_esim_data.py
 ```
 
 ### 2. Build & Deploy
-Use the helper script to generate data, build the Jar, upload to GCS, and submit the Spark job:
+Use the helper script to create infrastructure (Bucket, Dataproc, BigQuery), upload the code/data, and submit the Spark job:
 
 ```bash
 # Update PROJECT_ID in scripts/deploy_and_run.sh before running!
@@ -74,8 +73,7 @@ SELECT * FROM esim_analytics.daily_kpis ORDER BY date DESC;
 ```
 
 ## 🧹 Cleanup
-To avoid billing charges, destroy the infrastructure:
+To avoid billing charges, run the cleanup script to delete the infrastructure:
 ```bash
-cd terraform
-terraform destroy -var="project_id=YOUR_PROJECT_ID"
+sh scripts/cleanup.sh
 ```
